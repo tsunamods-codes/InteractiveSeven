@@ -10,7 +10,7 @@ namespace InteractiveSeven.Core
 
         public static bool StartsWithIns(this string a, string b)
         {
-            return a.StartsWith(b, StringComparison.OrdinalIgnoreCase);
+            return a?.StartsWith(b ?? "", StringComparison.OrdinalIgnoreCase) ?? true;
         }
 
         public static bool EqualsIns(this string a, string b)
@@ -24,6 +24,12 @@ namespace InteractiveSeven.Core
             return result;
         }
 
-        public static string NoAt(this string text) => text.TrimStart('@');
+        public static ushort SafeUshortParse(this string text)
+        {
+            ushort.TryParse(text, out ushort result);
+            return result;
+        }
+
+        public static string NoAt(this string text) => text?.TrimStart('@');
     }
 }

@@ -1,10 +1,13 @@
-﻿using InteractiveSeven.Core;
+﻿using InteractiveSeven.Commands;
+using InteractiveSeven.Core;
 using InteractiveSeven.Core.Data;
 using InteractiveSeven.Core.Diagnostics;
 using InteractiveSeven.Core.Diagnostics.Memory;
 using InteractiveSeven.Core.Emitters;
+using InteractiveSeven.Core.FinalFantasy;
 using InteractiveSeven.Core.IntervalMessages;
 using InteractiveSeven.Core.Models;
+using InteractiveSeven.Core.MvvmCommands;
 using InteractiveSeven.Core.Payments;
 using InteractiveSeven.Core.Services;
 using InteractiveSeven.Core.Settings;
@@ -19,12 +22,11 @@ using InteractiveSeven.Web.Hubs;
 using Microsoft.Extensions.DependencyInjection;
 using Serilog;
 using System.Collections.Generic;
-using InteractiveSeven.Commands;
-using InteractiveSeven.Core.MvvmCommands;
 using Tseng;
-using Tseng.GameData;
 using Tseng.lib;
 using Tseng.RunOnce;
+using TwitchLib.Api;
+using TwitchLib.Api.Interfaces;
 using TwitchLib.Client;
 using TwitchLib.Client.Interfaces;
 
@@ -44,6 +46,9 @@ namespace InteractiveSeven.Startup
             services.AddSingleton<SettingsViewModel>();
             services.AddSingleton<MainWindowViewModel>();
             services.AddSingleton<TwitchAuthViewModel>();
+            services.AddSingleton<ThemeViewModel>();
+
+            services.AddSingleton<IModded, Modded>();
 
             services.AddSingleton<PartyStatusViewModel>();
 
@@ -57,13 +62,17 @@ namespace InteractiveSeven.Startup
             services.AddSingleton<IGameMomentAccessor, GameMomentAccessor>();
             services.AddSingleton<IMenuColorAccessor, MenuColorAccessor>();
             services.AddSingleton<IGilAccessor, GilAccessor>();
+            services.AddSingleton<IGpAccessor, GpAccessor>();
             services.AddSingleton<IInventoryAccessor, InventoryAccessor>();
             services.AddSingleton<IMateriaAccessor, MateriaAccessor>();
             services.AddSingleton<IBattleInfoAccessor, BattleInfoAccessor>();
             services.AddSingleton<INameAccessor, NameAccessor>();
             services.AddSingleton<IStatusAccessor, StatusAccessor>();
+            services.AddSingleton<ITwitchAPI, TwitchAPI>();
             services.AddSingleton<ITwitchClient, TwitchClient>();
             services.AddSingleton<IDialogService, DialogService>();
+
+            services.AddTransient<IThemeChanger, ThemeChanger>();
 
             services.RegisterEquipmentData();
 
@@ -80,13 +89,17 @@ namespace InteractiveSeven.Startup
             services.RegisterNonBattleCommand<PauperCommand>();
             services.RegisterNonBattleCommand<RemovePlayerGilCommand>();
             services.RegisterNonBattleCommand<GivePlayerGilCommand>();
+            services.RegisterNonBattleCommand<RemovePlayerGpCommand>();
+            services.RegisterNonBattleCommand<GivePlayerGpCommand>();
 
             services.RegisterTwitchCommand<PaletteCommand>();
             services.RegisterTwitchCommand<RainbowCommand>();
             services.RegisterTwitchCommand<MakoCommand>();
+            services.RegisterTwitchCommand<DropCommand>();
             services.RegisterTwitchCommand<ItemCommand>();
             services.RegisterTwitchCommand<MateriaCommand>();
             services.RegisterTwitchCommand<CostsCommand>();
+            services.RegisterTwitchCommand<RemoveGilCommand>();
             services.RegisterTwitchCommand<GiveGilCommand>();
             services.RegisterTwitchCommand<NameBidsCommand>();
             services.RegisterTwitchCommand<MenuCommand>();

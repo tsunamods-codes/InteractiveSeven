@@ -10,11 +10,14 @@ namespace InteractiveSeven.Core.Settings
     {
         private string[] _givePlayerGilCommandWords = { "FindGil", "GivePlayerGil" };
         private string[] _removePlayerGilCommandWords = { "DropGil", "RemovePlayerGil" };
+        private string[] _givePlayerGpCommandWords = { "FindGp", "GivePlayerGp" };
+        private string[] _removePlayerGpCommandWords = { "DropGp", "RemovePlayerGp" };
         private string[] _esunaCommandWords = { "Esuna", "Remedy" };
         private string[] _healCommandWords = { "Heal", "Cure" };
         private string[] _costsCommandWords = { "Costs", "Cost", "Price", "Prices" };
         private string[] _balanceCommandWords = { "Balance", "Gil" };
         private string[] _giveGilCommandWords = { "GiveGil", "Give" };
+        private string[] _removeGilCommandWords = { "RemoveGil", "Remove", "TakeGil" };
         private string[] _i7CommandWords = { "i7", "Interactive7", "Interactive" };
         private string[] _menuCommandWords = { "Menu", "MenuColor", "Window", "Windows" };
         private string[] _nameBidsCommandWords = { "NameBids", "NameBid" };
@@ -30,11 +33,12 @@ namespace InteractiveSeven.Core.Settings
         private string[] _pauperCommandWords = { "Pauper", "poor" };
         private string[] _materiaCommandWords = { "Materia", "Mats", "Material", "AddMateria" };
         private string[] _itemCommandWords = { "Item", "Items", "AddItem" };
+        private string[] _dropCommandWords = { "Drop" };
 
         private string[] _cloudWords = { "cloud", "cluod", "clodu" };
         private string[] _barretWords = { "barret", "baret", "barett", "barrett" };
         private string[] _tifaWords = { "tifa", "tiaf", "tfia" };
-        private string[] _aerisWords = { "aeris", "aerith" };
+        private string[] _aerisWords = { "aeris", "aerith", "aris", "aries" };
         private string[] _caitWords = { "caitsith", "cait" };
         private string[] _cidWords = { "cid" };
         private string[] _redWords = { "red", "redxiii", "nanaki", "redxii", "redxiiii", "red13" };
@@ -51,10 +55,15 @@ namespace InteractiveSeven.Core.Settings
                 ("BrendanLock", () => new [] {"BrendanLock"}),
                 ("BrendanUnlock", () => new [] {"BrendanUnlock"}),
 
-                (nameof(GiveGilCommandWords),
-                    () => GiveGilCommandWords),
+                (nameof(GivePlayerGilCommandWords),
+                    () => GivePlayerGilCommandWords),
                 (nameof(RemovePlayerGilCommandWords),
                     () => RemovePlayerGilCommandWords),
+
+                (nameof(GivePlayerGpCommandWords),
+                    () => GivePlayerGpCommandWords),
+                (nameof(RemovePlayerGpCommandWords),
+                    () => RemovePlayerGpCommandWords),
 
                 (nameof(EsunaCommandWords),
                     () => EsunaCommandWords),
@@ -64,6 +73,8 @@ namespace InteractiveSeven.Core.Settings
                     () => CostsCommandWords),
                 (nameof(BalanceCommandWords),
                     () => BalanceCommandWords),
+                (nameof(RemoveGilCommandWords),
+                    () => RemoveGilCommandWords),
                 (nameof(GiveGilCommandWords),
                     () => GiveGilCommandWords),
                 (nameof(I7CommandWords),
@@ -95,6 +106,8 @@ namespace InteractiveSeven.Core.Settings
                     () => MateriaCommandWords),
                 (nameof(ItemCommandWords),
                     () => ItemCommandWords),
+                (nameof(DropCommandWords),
+                    () => DropCommandWords),
 
                 (nameof(CloudCommandWords),
                     () => CloudCommandWords),
@@ -150,6 +163,26 @@ namespace InteractiveSeven.Core.Settings
             }
         }
 
+        public string[] GivePlayerGpCommandWords
+        {
+            get => _givePlayerGpCommandWords;
+            set
+            {
+                _givePlayerGpCommandWords = RemoveAllDuplicates(value);
+                OnPropertyChanged();
+            }
+        }
+
+        public string[] RemovePlayerGpCommandWords
+        {
+            get => _removePlayerGpCommandWords;
+            set
+            {
+                _removePlayerGpCommandWords = RemoveAllDuplicates(value);
+                OnPropertyChanged();
+            }
+        }
+
         public string[] EsunaCommandWords
         {
             get => _esunaCommandWords;
@@ -186,6 +219,16 @@ namespace InteractiveSeven.Core.Settings
             set
             {
                 _balanceCommandWords = RemoveAllDuplicates(value);
+                OnPropertyChanged();
+            }
+        }
+
+        public string[] RemoveGilCommandWords
+        {
+            get => _removeGilCommandWords;
+            set
+            {
+                _removeGilCommandWords = RemoveAllDuplicates(value);
                 OnPropertyChanged();
             }
         }
@@ -336,6 +379,16 @@ namespace InteractiveSeven.Core.Settings
             set
             {
                 _itemCommandWords = RemoveAllDuplicates(value);
+                OnPropertyChanged();
+            }
+        }
+
+        public string[] DropCommandWords
+        {
+            get => _dropCommandWords;
+            set
+            {
+                _dropCommandWords = RemoveAllDuplicates(value);
                 OnPropertyChanged();
             }
         }

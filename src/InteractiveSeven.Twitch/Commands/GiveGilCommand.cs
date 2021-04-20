@@ -2,9 +2,10 @@
 using InteractiveSeven.Core.Model;
 using InteractiveSeven.Core.Payments;
 using InteractiveSeven.Twitch.Model;
-using System.Collections.Generic;
 using System.Linq;
+using TwitchLib.Api.Interfaces;
 using TwitchLib.Client.Interfaces;
+using System.Collections.Generic;
 
 namespace InteractiveSeven.Twitch.Commands
 {
@@ -12,18 +13,21 @@ namespace InteractiveSeven.Twitch.Commands
     {
         private readonly GilBank _gilBank;
         private readonly ITwitchClient _twitchClient;
+        private readonly ITwitchAPI _api;
 
-        public GiveGilCommand(GilBank gilBank, ITwitchClient twitchClient)
+        public GiveGilCommand(GilBank gilBank, ITwitchClient twitchClient, ITwitchAPI api)
             : base(x => x.GiveGilCommandWords, x => true)
         {
             _gilBank = gilBank;
             _twitchClient = twitchClient;
+            _api = api;
         }
 
         public override GamePlayEffects GamePlayEffects => GamePlayEffects.DisplayOnly;
 
         public override void Execute(in CommandData commandData)
         {
+
             var (isValid, amount, recipient) = ParseArgs(commandData.Arguments);
             if (!isValid)
             {
@@ -72,18 +76,33 @@ namespace InteractiveSeven.Twitch.Commands
         private (bool isValid, int amount, string recipient) ParseArgs(IList<string> args)
         {
             bool isValid = true;
-            string recipient = args.FirstOrDefault(x => _gilBank.HasAccount(x));
-            int amount = args
-                .Except(new[] { recipient })
-                .Select(x => x.SafeIntParse())
-                .FirstOrDefault(x => x > 0);
 
-            if (recipient == null || amount < 1)
+            (string amountArg, int amount) = args
+                .Select(x => (Arg: x, Gil: x.SafeIntParse()))
+                .FirstOrDefault(x => x.Gil > 0);
+
+            string recipient = args
+                .Except(new[] { amountArg })
+                .FirstOrDefault();
+
+            if (recipient == null || amount < 1 || !RecipientIsValid(recipient))
             {
                 isValid = false;
             }
 
             return (isValid, amount, recipient);
+        }
+
+        private bool RecipientIsValid(string recipient)
+        {
+            if (_gilBank.HasAccount(new ChatUser(recipient, null)))
+            {
+                return true;
+            }
+
+            var response = _api.Helix.Users.GetUsersAsync(logins: new List<string> { recipient }).Result;
+
+            return response?.Users?.Any() ?? false;
         }
     }
 }

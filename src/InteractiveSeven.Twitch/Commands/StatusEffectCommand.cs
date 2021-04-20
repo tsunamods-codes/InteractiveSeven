@@ -1,6 +1,7 @@
 ﻿using InteractiveSeven.Core.Battle;
 using InteractiveSeven.Core.Diagnostics.Memory;
 using InteractiveSeven.Core.Emitters;
+using InteractiveSeven.Core.FinalFantasy.Constants;
 using InteractiveSeven.Core.FinalFantasy.Models;
 using InteractiveSeven.Core.Settings;
 using InteractiveSeven.Core.ViewModels;
@@ -8,7 +9,6 @@ using InteractiveSeven.Twitch.Model;
 using InteractiveSeven.Twitch.Payments;
 using System.Collections.Generic;
 using System.Linq;
-using Tseng.Constants;
 using TwitchLib.Client.Interfaces;
 
 namespace InteractiveSeven.Twitch.Commands
@@ -96,6 +96,7 @@ namespace InteractiveSeven.Twitch.Commands
                 .Where(x => _partyStatus?.Party?[x.Index]?.Id != FF7Const.Empty))
             {
                 Character characterRecord = charRecords[target.Index];
+                if (characterRecord == null) continue;
 
                 if (characterRecord.Accessory?.ProtectsFrom(effect) ?? false)
                 {
